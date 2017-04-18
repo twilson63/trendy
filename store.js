@@ -1,7 +1,9 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { ListView } from 'react-native'
+import PouchDB from 'pouchdb-react-native'
 
+const db = new PouchDB('trendy')
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 })
 
 const store = createStore(
@@ -24,9 +26,26 @@ const store = createStore(
     },
     settings: () => null,
     settingsDs: () => null,
-    readme: (state = '', action) => {
+    repo: (state = '', action) => {
       switch (action.type) {
-        case 'SET_README':
+        case 'SET_REPO':
+          console.log(action.payload)
+          return action.payload
+        default:
+          return state
+      }
+    },
+    bookmarkDs: (state=ds.cloneWithRows([]), action) => {
+      switch (action.type) {
+        case 'SET_BOOKMARKS':
+          return ds.cloneWithRows(action.payload)
+        default:
+          return state
+      }
+    },
+    db: (state = null, action) => {
+      switch (action.type) {
+        case 'SET_DB':
           return action.payload
         default:
           return state
@@ -35,5 +54,7 @@ const store = createStore(
   }),
   applyMiddleware(thunk)
 )
+
+store.dispatch({ type: 'SET_DB', payload: db })
 
 export default store
