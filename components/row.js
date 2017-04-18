@@ -3,12 +3,13 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Link } from 'react-router-native'
 import { wrap } from 'react-native-style-tachyons'
+import { replace } from 'ramda'
 
 const Row = props => {
   return (
-    <Link to={`/:id`}>
-      <View cls='jcc aic bb'>
-        <Text cls='f3 pv2'>{props.name}</Text>
+    <Link to={`/show?url=${props.url}`}>
+      <View cls='jcc aifs bb'>
+        <Text cls='f5 mh2 pv2'>{replace('Show HN: ', '', props.title)}</Text>
       </View>
     </Link>
   )
